@@ -1,0 +1,19 @@
+---
+
+- hosts: localhost
+  connection: local
+  become: false
+  vars:
+    subscription_id: "{{ lookup('env', 'AZURE_SUBSCRIPTION_ID') }}"
+    HUB_RG: "{{ azure_cluster_resource }}"     # resource group of the ACM hub cluster
+    HUB_PDNSZ: "{{ azure_dns_zone }}"          # private dns zone domain string
+
+    # can we get these metadata from the inventory
+    AKS_MRG: "mrg-...-preview-20220331094426"  # managed application resource group name
+    AKS_NAME: "aks-...-centralus"              # AKS k8s service name
+    AKS_SUB: "e47e6908-..."                    # subscription id of the AKS cluster
+    managed_application: "acmaocdevtest0418"   # name of the managed application, we'll add this label to the managed cluster CR    
+
+  tasks:
+  - include_role:
+      name: ../roles/connect-aks-to-acm-hub-collection
